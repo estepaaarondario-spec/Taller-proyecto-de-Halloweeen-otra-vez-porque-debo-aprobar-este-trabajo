@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Feliz Halloween</title>
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎃</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Creepster&family=IM+Fell+English:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--night:#0b0a10;--bone:#efe9dc;--violet:#6a4c93;--orange:#ff7a1a;color-scheme:dark}
+*{box-sizing:border-box}
+html{background:var(--night)}
+body{margin:0;min-height:100vh;color:var(--bone);font-family:'IM Fell English',Georgia,serif;font-size:1.1rem;line-height:1.5;
+  background:radial-gradient(ellipse at 50% -10%,#2b1f3d 0,var(--night) 60%);
+  padding:0 16px max(40px,env(safe-area-inset-bottom));overflow-x:hidden}
+.stripes{height:14px;margin:0 -16px;background:repeating-linear-gradient(-45deg,var(--bone) 0 18px,var(--night) 18px 36px)}
+.hero{text-align:center;padding:36px 0 10px}
+.moon{font-size:4rem;line-height:1}
+h1,h2{font-family:'Creepster','Impact',cursive;font-weight:400;letter-spacing:.04em;margin:0}
+h1{font-size:clamp(3rem,13vw,6.5rem);line-height:1;text-shadow:3px 3px 0 var(--violet),7px 7px 0 #000;display:inline-block;animation:wobble 5s ease-in-out infinite}
+h2{font-size:2.2rem;color:var(--orange);text-shadow:2px 2px 0 #000}
+.hero p{font-style:italic;color:#cfc6b3;margin:10px 0 0}
+main{max-width:640px;margin:0 auto}
+.game{text-align:center;padding-top:24px}
+.warn{border:2px dashed var(--violet);border-radius:6px;padding:8px 12px;margin:10px 0 18px;font-style:italic}
+.hud{display:flex;justify-content:space-between;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.frame{position:relative;width:100%;max-width:600px;margin:0 auto;aspect-ratio:1;box-shadow:0 0 0 4px var(--bone),0 0 0 10px var(--night),0 0 0 14px var(--violet),0 0 40px rgba(106,76,147,.5)}
+canvas{display:block;width:100%;height:100%;background:var(--night)}
+.veil{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:rgba(11,10,16,.88);padding:20px}
+.veil.hide{display:none}
+button{font:inherit;color:var(--night);background:var(--bone);border:3px solid var(--night);outline:2px solid var(--bone);border-radius:4px;padding:8px 18px;cursor:pointer;transition:transform .12s,background .12s}
+button:hover{background:var(--orange);transform:rotate(-2deg) scale(1.04)}
+button:focus-visible{outline:3px solid var(--orange);outline-offset:3px}
+.actions{margin-top:22px}
+.pad{display:grid;grid-template-columns:repeat(3,64px);grid-template-areas:". u ." "l d r";gap:8px;justify-content:center;margin-top:20px}
+.pad button{height:56px;font-size:1.5rem;padding:0}
+.pad [data-d=n]{grid-area:u}.pad [data-d=w]{grid-area:l}.pad [data-d=s]{grid-area:d}.pad [data-d=e]{grid-area:r}
+footer{text-align:center;color:#9a917f;font-size:.9rem;margin-top:44px}
+.bat{position:fixed;top:var(--y);left:-60px;font-size:2rem;pointer-events:none;z-index:5;animation:fly var(--t) linear infinite;animation-delay:var(--d)}
+.scare{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;background:#000;overflow:hidden}
+.scare.on{display:flex;animation:flash .18s steps(2) 8}
+.face{font-size:80vmin;line-height:1;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background-size:cover;background-position:center;animation:jump .3s cubic-bezier(.2,2,.4,1) both,shake .08s linear .3s infinite}
+.scare button{position:absolute;bottom:8vh;display:none;font-size:1.2rem}
+.scare.done button{display:block}
+@keyframes wobble{0%,100%{transform:rotate(-1.5deg) skewX(-2deg)}50%{transform:rotate(1.5deg) skewX(2deg)}}
+@keyframes fly{from{transform:translateX(0) translateY(0)}50%{transform:translateX(55vw) translateY(40px)}to{transform:translateX(115vw) translateY(-10px)}}
+@keyframes jump{from{transform:scale(.1)}to{transform:scale(1.15)}}
+@keyframes shake{0%{transform:translate(0,0) scale(1.15)}25%{transform:translate(-14px,10px) scale(1.2)}50%{transform:translate(12px,-12px) scale(1.15)}75%{transform:translate(-10px,-8px) scale(1.22)}100%{transform:translate(8px,12px) scale(1.15)}}
+@keyframes flash{0%{background:#000}100%{background:#a30000}}
+@media(prefers-reduced-motion:reduce){h1,.bat{animation:none}.scare.on{animation:none}.bat{display:none}}
+</style>
+</head>
+<body>
+<div class="stripes"></div>
+<span class="bat" style="--y:10vh;--t:16s;--d:0s">🦇</span>
+<span class="bat" style="--y:22vh;--t:21s;--d:6s">🦇</span>
+<span class="bat" style="--y:6vh;--t:26s;--d:12s">🦇</span>
+
+<header class="hero">
+  <div class="moon">🌙</div>
+  <h1>Feliz Halloween</h1>
+  <p>Hay una puerta al otro lado del laberinto. Nadie dijo qué hay detrás.</p>
+</header>
+
+<main>
+  <section class="game" aria-labelledby="t-game">
+    <h2 id="t-game">El laberinto</h2>
+    <p class="warn">Aviso: al salir te espera un susto, con luces y sonido. Subí el volumen bajo tu propio riesgo.</p>
+    <div class="hud" aria-live="polite">
+      <span>Pasos: <b id="moves">0</b></span>
+      <span>Tiempo: <b id="time">0:00</b></span>
+    </div>
+    <div class="frame">
+      <canvas id="maze" width="600" height="600" aria-label="Laberinto: llegá a la puerta con las flechas del teclado o los botones"></canvas>
+      <div class="veil" id="veil">
+        <span style="font-size:3rem">🎃</span>
+        <p style="margin:0">Usá las flechas o WASD. Se ve poco: guiate por la luz de la calabaza.</p>
+        <button id="start">Entrar al laberinto</button>
+      </div>
+    </div>
+    <div class="pad" aria-label="Controles">
+      <button data-d="n" aria-label="Arriba">↑</button>
+      <button data-d="w" aria-label="Izquierda">←</button>
+      <button data-d="s" aria-label="Abajo">↓</button>
+      <button data-d="e" aria-label="Derecha">→</button>
+    </div>
+    <div class="actions"><button id="reset">Nuevo laberinto</button></div>
+  </section>
+</main>
+
+<footer>🕸️ Tipografías: Creepster e IM Fell English (Google Fonts) · Emojis Unicode estándar 🕷️</footer>
+
+<div class="scare" id="scare" role="alertdialog" aria-hidden="true" aria-label="Susto">
+  <div class="face" id="face">💀</div>
+  <button id="again">Volver a intentarlo</button>
+</div>
+
+<script>
+const N = 15, S = 600, C = S / N;
+const IMG = 'assets/screamer.jpg', SND = 'assets/screamer.mp3';
+const $ = id => document.getElementById(id);
+const ctx = $('maze').getContext('2d');
+let grid, px, py, moves, t0, timer, playing = false, audioCtx;
+
+/* Generador estándar: backtracking recursivo (iterativo) */
+function build(){
+  grid = Array.from({length:N}, () => Array.from({length:N}, () => ({n:1,e:1,s:1,w:1,v:0})));
+  const st = [[0,0]]; grid[0][0].v = 1;
+  while (st.length){
+    const [x,y] = st[st.length-1];
+    const nb = [[0,-1,'n','s'],[1,0,'e','w'],[0,1,'s','n'],[-1,0,'w','e']]
+      .filter(([dx,dy]) => { const a = x+dx, b = y+dy; return a>=0 && b>=0 && a<N && b<N && !grid[b][a].v; });
+    if (!nb.length){ st.pop(); continue; }
+    const [dx,dy,a,b] = nb[Math.random()*nb.length|0];
+    grid[y][x][a] = 0; grid[y+dy][x+dx][b] = 0; grid[y+dy][x+dx].v = 1; st.push([x+dx,y+dy]);
+  }
+  px = 0; py = 0; moves = 0; t0 = null; clearInterval(timer); hud();
+}
+
+function draw(){
+  ctx.fillStyle = '#0b0a10'; ctx.fillRect(0,0,S,S);
+  ctx.strokeStyle = '#efe9dc'; ctx.lineWidth = 3; ctx.lineCap = 'round';
+  ctx.beginPath();
+  for (let y=0; y<N; y++) for (let x=0; x<N; x++){
+    const c = grid[y][x], X = x*C, Y = y*C;
+    if (c.n){ ctx.moveTo(X,Y); ctx.lineTo(X+C,Y); }
+    if (c.w){ ctx.moveTo(X,Y); ctx.lineTo(X,Y+C); }
+    if (x === N-1 && c.e){ ctx.moveTo(X+C,Y); ctx.lineTo(X+C,Y+C); }
+    if (y === N-1 && c.s){ ctx.moveTo(X,Y+C); ctx.lineTo(X+C,Y+C); }
+  }
+  ctx.stroke();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = (C*.68) + 'px serif';
+  const cx = px*C + C/2, cy = py*C + C/2;
+  ctx.fillText('🎃', cx, cy + 2);
+  const g = ctx.createRadialGradient(cx, cy, C*.9, cx, cy, C*3.6);
+  g.addColorStop(0, 'rgba(5,4,10,0)'); g.addColorStop(1, 'rgba(5,4,10,.98)');
+  ctx.fillStyle = g; ctx.fillRect(0,0,S,S);
+  ctx.globalAlpha = .5; ctx.fillText('🚪', (N-1)*C + C/2, (N-1)*C + C/2 + 2); ctx.globalAlpha = 1;
+}
+
+function hud(){
+  $('moves').textContent = moves;
+  const s = t0 ? Math.floor((Date.now()-t0)/1000) : 0;
+  $('time').textContent = Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+}
+
+function move(dir){
+  if (!playing || grid[py][px][dir]) return;
+  const d = {n:[0,-1], e:[1,0], s:[0,1], w:[-1,0]}[dir];
+  px += d[0]; py += d[1]; moves++;
+  if (!t0){ t0 = Date.now(); timer = setInterval(hud, 250); }
+  draw(); hud();
+  if (px === N-1 && py === N-1) win();
+}
+
+function newGame(){ build(); draw(); }
+function win(){ playing = false; clearInterval(timer); hud(); setTimeout(scare, 700); }
+
+/* Susto: usa assets/screamer.jpg y assets/screamer.mp3 si existen; si no, emoji + sonido generado */
+const pic = new Image();
+pic.onload = () => { $('face').style.backgroundImage = 'url(' + IMG + ')'; $('face').textContent = ''; };
+pic.src = IMG;
+
+function synth(){
+  try {
+    const a = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); audioCtx = a;
+    const t = a.currentTime, g = a.createGain();
+    g.gain.setValueAtTime(.35, t); g.gain.exponentialRampToValueAtTime(.001, t+1.6); g.connect(a.destination);
+    [220, 233, 466, 880].forEach((f,i) => {
+      const o = a.createOscillator(); o.type = i%2 ? 'sawtooth' : 'square';
+      o.frequency.setValueAtTime(f, t); o.frequency.exponentialRampToValueAtTime(f*3, t+.5);
+      o.connect(g); o.start(t); o.stop(t+1.6);
+    });
+    const buf = a.createBuffer(1, a.sampleRate*1.2, a.sampleRate), d = buf.getChannelData(0);
+    for (let i=0; i<d.length; i++) d[i] = Math.random()*2 - 1;
+    const n = a.createBufferSource(); n.buffer = buf; n.connect(g); n.start(t);
+  } catch(e){}
+}
+
+function scare(){
+  const s = $('scare'); s.classList.add('on'); s.setAttribute('aria-hidden','false');
+  new Audio(SND).play().catch(synth);
+  if (navigator.vibrate) navigator.vibrate([200,80,300]);
+  setTimeout(() => { s.classList.add('done'); $('again').focus(); }, 2600);
+}
+
+$('again').onclick = () => {
+  const s = $('scare'); s.classList.remove('on','done'); s.setAttribute('aria-hidden','true');
+  newGame(); playing = true;
+};
+
+$('start').onclick = () => {
+  try { audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)(); audioCtx.resume(); } catch(e){}
+  $('veil').classList.add('hide'); playing = true;
+};
+$('reset').onclick = () => { newGame(); playing = !$('veil').classList.contains('hide') ? false : true; };
+
+document.addEventListener('keydown', e => {
+  const k = {ArrowUp:'n', ArrowRight:'e', ArrowDown:'s', ArrowLeft:'w', w:'n', d:'e', s:'s', a:'w', W:'n', D:'e', S:'s', A:'w'}[e.key];
+  if (k && playing){ e.preventDefault(); move(k); }
+});
+document.querySelectorAll('.pad button').forEach(b => b.onclick = () => move(b.dataset.d));
+
+newGame();
+</script>
+</body>
+</html>
